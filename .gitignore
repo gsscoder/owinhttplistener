@@ -1,0 +1,17 @@
+src/Owin.Listener/bin/*
+src/Owin.Listener/obj
+src/Owin.Listener.Demo/bin/*
+src/Owin.Listener.Demo/obj
+*.suo
+*.userprefs
+*~
+*.pidb
+*.test-cache
+*.DS_Store
+*.csproj.user
+*_*.cs
+*.DotSettings.user
+*.v11.suo
+_old
+*.mdb
+*.pdb
