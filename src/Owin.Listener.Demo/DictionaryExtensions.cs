@@ -1,17 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Owin.Listener.Demo
 {
-    static class DictionaryExtensions
+    public static class DictionaryExtensions
     {
-        public static T TryGet<T>(this IDictionary<string, object> dictionary, string key)
-            where T : class
+        public static TValue GetValueOrDefault<TKey,TValue>(this IDictionary<TKey,TValue> dictionary, TKey key, TValue defaultValue)
         {
-            return dictionary.ContainsKey(key) ? dictionary[key] as T : null;
+            TValue value;
+            if (!dictionary.TryGetValue(key, out value))
+            {
+                value = defaultValue;
+            }
+            return value;
         }
+
+        public static TValue GetValueOrDefault<TKey,TValue>(this IDictionary<TKey,TValue> dictionary, TKey key)
+        {
+            return GetValueOrDefault(dictionary, key, default(TValue));
+        }   
     }
 }

@@ -57,6 +57,11 @@ namespace Owin.Listener
             _cts = new CancellationTokenSource();
         }
 
+        public OwinHttpListener(AppFunc appFunc, int port)
+            : this(appFunc, new IPAddress(new byte[] {0, 0, 0, 0}), port)
+        {
+        }
+
         public IPAddress LocalEndPoint { get; private set; }
 
         public int Port { get; private set; }
@@ -81,14 +86,25 @@ namespace Owin.Listener
             var socket = await _listener.AcceptSocketAsync();
             var stream = new NetworkStream(socket);
 
-            //Trace.WriteLine(Encoding.UTF8.GetString(buffer.Array.Take(buffer.Count).ToArray()));
-
             var environment = await CreateEnvironmentAsync(stream);
 
-            await _appFunc(environment);
-
-            stream.Close();
-            socket.Close();
+            await _appFunc(environment)
+                .Then(() =>
+                    {
+                        stream.Close();
+                        socket.Close();
+                    })
+                .Catch(err =>
+                    {
+                        Trace.WriteLine(err.Exception.Message);
+                        try
+                        {
+                            stream.Close();
+                            socket.Close();
+                        }
+                        catch {}
+                        return err.Handled();
+                    });
 
             await ListenAsync();
         }

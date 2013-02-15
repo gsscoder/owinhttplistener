@@ -12,7 +12,7 @@ namespace Owin.Listener.Demo
     {
         static void Main(string[] args)
         {
-            var listener = new OwinHttpListener(new OwinApplication().ProcessRequest, new IPAddress(new byte[] { 0, 0, 0, 0 }), 8899);
+            var listener = new OwinHttpListener(new OwinApplication().ProcessRequest, 8899);
             listener.Start();
 
             listener.ListenAsync().Wait();

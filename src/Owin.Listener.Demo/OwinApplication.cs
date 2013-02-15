@@ -1,71 +1,74 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Owin.Types;
+using AppFunc = System.Func< // Call
+        System.Collections.Generic.IDictionary<string, object>, // Environment
+                System.Threading.Tasks.Task>; // Done
 
 namespace Owin.Listener.Demo
 {
-    class OwinApplication
+    /// <summary>
+    /// This is a sample Owin (http://owin.org/) App derived from https://github.com/markrendle/Fix/tree/master/Print.
+    /// </summary>
+    public class OwinApplication
     {
-        public async Task ProcessRequest(IDictionary<string, object> environment)
+        public Task ProcessRequest(IDictionary<string, object> env)
         {
-            //await Task.Run(() => {
-                Trace.WriteLine("ENTER OwinApplication::ProcessRequest");
-                var requestPath = environment.TryGet<string>(OwinConstants.RequestPath);
-                if (!string.IsNullOrEmpty(requestPath))
+            try
+            {
+                var scriptName = env.GetPath().ToLower();
+                if (!(scriptName.Contains("/info") || scriptName.Contains(".")))
                 {
-                    Trace.WriteLine(requestPath);
+                    return HandlePrintRequest(env);
                 }
-                var ns = environment.TryGet<Stream>(OwinConstants.ResponseBody);
-                if (ns != null)
-                {
-                    var method = environment.TryGet<string>(OwinConstants.RequestMethod);
-                    if (!string.IsNullOrEmpty(method))
-                    {
-                        Trace.WriteLine(method);
-                    }
-                    //{
-                    //    var buffer = method.ToUpperInvariant() == "GET"
-                    //        ? GetResponseWithContent()
-                    //        : GetResponseEmpty();
-                    var buffer = GetResponseWithContent();
-                        await ns.WriteAsync(buffer, 0, buffer.Length);
-                    //}
-                }
-                else
-                {
-                    Trace.WriteLine("ERROR: no response stream");
-                }
-            //});
+            }
+            catch (Exception ex)
+            {
+                return TaskHelper.Error(ex);
+            }
+            return TaskHelper.NotFound();
         }
 
-        private static byte[] GetResponseEmpty()
+        private static Task HandlePrintRequest(IDictionary<string, object> env)
         {
-            var builder = new StringBuilder();
-            builder.Append("HTTP/1.1 200 OK\r\n\r\n");
-            return Encoding.UTF8.GetBytes(builder.ToString());
+            env["owin.ResponseStatusCode"] = 200;
+            env["owin.ResponseHeaders"] =
+                new Dictionary<string, string[]> { { "Content-Type", new[] { "text/html" } } };
+            return ((Stream)env["owin.ResponseBody"]).WriteAsync(BuildHtml(env));
         }
 
-        private static byte[] GetResponseWithContent()
+        private static string BuildHtml(IDictionary<string, object> env)
         {
-            var builder = new StringBuilder();
-            builder.Append("HTTP/1.1 200 OK\r\n");
-            builder.Append("Content-Type: text/html\r\n");
-            builder.Append("Date: ");
-            builder.Append(DateTime.Now.ToUniversalTime().ToString("R"));
-            builder.Append("\r\n");
-            builder.Append("Cache-Control: no-cache\r\n\r\n");
-            builder.Append("<html><head><title>Owin Application</title></head>\r\n");
-            builder.Append("<body><p>\r\n");
-            builder.Append("Hello, from OWIN AppFunc; ");
-            builder.Append(DateTime.Now.ToLongTimeString());
-            builder.Append("\r\n");
-            builder.Append("</p></body>\r\n");
-            return Encoding.UTF8.GetBytes(builder.ToString());
+            var builder = new StringBuilder("<html><body>");
+            builder.AppendFormat("<p>{0}</p>", ConstructUri(env));
+            builder.AppendFormat("<p>{0}</p>", env["owin.RequestMethod"]);
+            foreach (var header in env)
+            {
+                builder.AppendFormat("<p><strong>{0}</strong>: {1}</p>", header.Key, header.Value);
+            }
+            builder.Append("</body></html>");
+            return builder.ToString();
+        }
+
+        private static string ConstructUri(IDictionary<string, object> env)
+        {
+            object serverName;
+            if (!env.TryGetValue("host.ServerName", out serverName))
+            {
+                serverName = "*";
+            }
+            var builder = new StringBuilder(env["owin.RequestScheme"] + "://" + serverName);
+            if (env.ContainsKey("host.ServerPort") && env["host.ServerPort"].ToString() != "80")
+            {
+                builder.AppendFormat(":{0}", env["host.ServerPort"]);
+            }
+            if (!string.IsNullOrEmpty(env["owin.RequestPath"].ToString()))
+            {
+                builder.AppendFormat("{0}", env["owin.RequestPath"]);
+            }
+            return builder.ToString();
         }
     }
 }
