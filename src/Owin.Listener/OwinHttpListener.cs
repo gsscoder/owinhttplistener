@@ -88,23 +88,10 @@ namespace Owin.Listener
 
             var environment = await CreateEnvironmentAsync(stream);
 
-            await _appFunc(environment)
-                .Then(() =>
-                    {
-                        stream.Close();
-                        socket.Close();
-                    })
-                .Catch(err =>
-                    {
-                        Trace.WriteLine(err.Exception.Message);
-                        try
-                        {
-                            stream.Close();
-                            socket.Close();
-                        }
-                        catch {}
-                        return err.Handled();
-                    });
+            await _appFunc(environment);
+
+            stream.Close();
+            socket.Close();
 
             await ListenAsync();
         }

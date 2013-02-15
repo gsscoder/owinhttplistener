@@ -1,7 +1,6 @@
 2012-02-15	Giacomo Stelluti Scala	<gsscoder@gmail.com>
 
   * Used newest version of HttpHelpers (truly async) and imported sources using prerelease NuGet package.
-  * Added TaskHelpers source package.
   * Pulled in sample from https://github.com/gsscoder/simpleowinapp.
 
 2012-02-14	Giacomo Stelluti Scala	<gsscoder@gmail.com>
