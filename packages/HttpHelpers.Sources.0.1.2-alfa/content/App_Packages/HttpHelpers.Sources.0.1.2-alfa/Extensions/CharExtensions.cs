@@ -1,6 +1,6 @@
-#region License
+﻿#region License
 //
-// Owin Http Listener: SharedAssemblyInfo.cs
+// Http Helpers Library: CharExtensions.cs
 //
 // Author:
 //   Giacomo Stelluti Scala (gsscoder@gmail.com)
@@ -26,16 +26,41 @@
 // THE SOFTWARE.
 //
 #endregion
-#region Using Directives
-using System.Reflection;
-using System.Resources;
-#endregion
 
-[assembly: AssemblyProduct("Owin Http Listener Library")]
-[assembly: AssemblyDescription("Http Helpers for .NET")]
-[assembly: AssemblyCopyright("Copyright (C) 2013 Giacomo Stelluti Scala")]
-[assembly: AssemblyVersion("0.1.0.3")]
-[assembly: AssemblyFileVersion("0.1.0.3")]
-[assembly: AssemblyInformationalVersion("0.1.0-alfa")]
-[assembly: NeutralResourcesLanguage("en-US")]
-[assembly: AssemblyCulture("")]
+namespace HttpHelpers.Extensions
+{
+    static class CharExtensions
+    {
+        public static bool IsWhiteSpace(this char c)
+        {
+            switch (c)
+            {
+                // Regular
+                case '\f':
+                case '\v':
+                case ' ':
+                case '\t':
+                    return true;
+
+                // Unicode
+                default:
+                    return (c > 127 && char.IsWhiteSpace(c));
+            }
+        }
+
+        public static bool IsLineTerminator(this char c)
+        {
+            switch (c)
+            {
+                case '\xD':
+                case '\xA':
+                case '\x2028':
+                case '\x2029':
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+    }
+}

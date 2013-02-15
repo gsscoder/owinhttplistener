@@ -1,6 +1,6 @@
 ﻿#region License
 //
-// Http Core Library: AssemblyInfo.cs
+// Owin Http Listener: AssemblyInfo.cs
 //
 // Author:
 //   Giacomo Stelluti Scala (gsscoder@gmail.com)

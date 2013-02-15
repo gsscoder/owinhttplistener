@@ -95,20 +95,15 @@ namespace Owin.Listener
 
         private static async Task<IDictionary<string, object>> CreateEnvironmentAsync(NetworkStream stream)
         {
-            var buffer = await stream.ToByteArrayAsync();
-            var callbacks = new RequestCallbacks();
-            await HttpParser.ParseRequestAsync(new ByteArrayCharStream(buffer), callbacks);
-            //if (callbacks.HasError)
-            //{
-            //    Trace.WriteLine("error occurred during parsing");
-            //}
+            var request = await Request.FromStreamAsync(stream);
+            request.Body = stream;
 
-            var response = new OwinResponse(callbacks.Request);
-            response.Body = stream;
+            var response = new OwinResponse(request)
+                {
+                    Body = stream
+                };
 
-            //Trace.WriteLine("callbacks.Request.Dictionary.Count:" + callbacks.Request.Dictionary.Count);
-
-            return callbacks.Request.Dictionary;
+            return request.Dictionary;
         }
 
         public void Stop()

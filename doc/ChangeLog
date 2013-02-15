@@ -1,3 +1,7 @@
+2012-02-15	Giacomo Stelluti Scala	<gsscoder@gmail.com>
+
+  * Used newest version of HttpHelpers (truly async) and imported sources using prerelease NuGet package.
+
 2012-02-14	Giacomo Stelluti Scala	<gsscoder@gmail.com>
 
   * Initial release.

@@ -1,6 +1,6 @@
-#region License
+﻿#region License
 //
-// Owin Http Listener: SharedAssemblyInfo.cs
+// Http Helpers Library: StringExtensions.cs
 //
 // Author:
 //   Giacomo Stelluti Scala (gsscoder@gmail.com)
@@ -27,15 +27,35 @@
 //
 #endregion
 #region Using Directives
-using System.Reflection;
-using System.Resources;
+using System.Linq;
 #endregion
 
-[assembly: AssemblyProduct("Owin Http Listener Library")]
-[assembly: AssemblyDescription("Http Helpers for .NET")]
-[assembly: AssemblyCopyright("Copyright (C) 2013 Giacomo Stelluti Scala")]
-[assembly: AssemblyVersion("0.1.0.3")]
-[assembly: AssemblyFileVersion("0.1.0.3")]
-[assembly: AssemblyInformationalVersion("0.1.0-alfa")]
-[assembly: NeutralResourcesLanguage("en-US")]
-[assembly: AssemblyCulture("")]
+namespace HttpHelpers.Extensions
+{
+    static class StringExtensions
+    {
+        public static string TrimStartIf(this string value, char c)
+        {
+            return !string.IsNullOrEmpty(value) && c == value[0] ? value.TrimStart(c) : value;
+        }
+
+        public static string TrimStartIf(this string value, params char[] chars)
+        {
+            return !string.IsNullOrEmpty(value) && chars.Any(c => c == value[0]) ? value.TrimStart(chars) : value;
+        }
+
+        public static string TrimEndIf(this string value, char c)
+        {
+            return !string.IsNullOrEmpty(value) && c == value[0] ? value.TrimEnd(c) : value;
+        }
+
+        //public static string TrimStartWhen(this string value, Func<char, bool> match)
+        //{
+        //    if (string.IsNullOrEmpty(value))
+        //    {
+        //        return value;
+        //    }
+        //    value.t
+        //}
+    }
+}

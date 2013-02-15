@@ -1,4 +1,4 @@
-﻿Owin HTTP Listener 0.1.0.1 alfa.
+﻿Owin HTTP Listener 0.1.0.3 alfa.
 ===
 Essential and simple async Owin HTTP listener for .NET 4.5. This library uses Owin.Types from [http://www.myget.org/F/owin/](http://www.myget.org/F/owin/)
 and [HttpHelpers](https://github.com/gsscoder/httphelpers).

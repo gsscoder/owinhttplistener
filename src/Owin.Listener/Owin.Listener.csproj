@@ -32,10 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HttpHelpers, Version=0.1.0.19, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\HttpHelpers.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -48,6 +44,10 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="App_Packages\HttpHelpers.Sources.0.1.2-alfa\Extensions\CharExtensions.cs" />
+    <Compile Include="App_Packages\HttpHelpers.Sources.0.1.2-alfa\Extensions\StringExtensions.cs" />
+    <Compile Include="App_Packages\HttpHelpers.Sources.0.1.2-alfa\Extensions\StringReaderExtensions.cs" />
+    <Compile Include="App_Packages\HttpHelpers.Sources.0.1.2-alfa\HttpParser.cs" />
     <Compile Include="App_Packages\Owin.Types.Sources.0.8.3-alpha\Extensions\OwinRequestExtensions.cs" />
     <Compile Include="App_Packages\Owin.Types.Sources.0.8.3-alpha\Helpers\OwinHelpers.cs" />
     <Compile Include="App_Packages\Owin.Types.Sources.0.8.3-alpha\OwinConstants.cs" />
@@ -62,7 +62,7 @@
     <Compile Include="OwinHttpListener.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequestCallbacks.cs" />
+    <Compile Include="Request.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
