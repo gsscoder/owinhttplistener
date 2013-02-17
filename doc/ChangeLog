@@ -1,3 +1,8 @@
+2012-02-17	Giacomo Stelluti Scala	<gsscoder@gmail.com>
+
+  * Owin Response Body is initialized with a MemoryStream that is back wrote to the active NetworkStream.
+  * Updated to HttpHelpers.Sources 0.1.6-alfa.
+
 2012-02-15	Giacomo Stelluti Scala	<gsscoder@gmail.com>
 
   * Used newest version of HttpHelpers (truly async) and imported sources using prerelease NuGet package.

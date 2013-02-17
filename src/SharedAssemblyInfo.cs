@@ -32,10 +32,10 @@ using System.Resources;
 #endregion
 
 [assembly: AssemblyProduct("Owin Http Listener Library")]
-[assembly: AssemblyDescription("Http Helpers for .NET")]
+[assembly: AssemblyDescription("Owin Http Listener for .NET")]
 [assembly: AssemblyCopyright("Copyright (C) 2013 Giacomo Stelluti Scala")]
-[assembly: AssemblyVersion("0.1.0.5")]
-[assembly: AssemblyFileVersion("0.1.0.5")]
+[assembly: AssemblyVersion("0.1.0.6")]
+[assembly: AssemblyFileVersion("0.1.0.6")]
 [assembly: AssemblyInformationalVersion("0.1.0-alfa")]
 [assembly: NeutralResourcesLanguage("en-US")]
 [assembly: AssemblyCulture("")]

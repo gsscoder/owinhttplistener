@@ -44,10 +44,11 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="App_Packages\HttpHelpers.Sources.0.1.2-alfa\Extensions\CharExtensions.cs" />
-    <Compile Include="App_Packages\HttpHelpers.Sources.0.1.2-alfa\Extensions\StringExtensions.cs" />
-    <Compile Include="App_Packages\HttpHelpers.Sources.0.1.2-alfa\Extensions\StringReaderExtensions.cs" />
-    <Compile Include="App_Packages\HttpHelpers.Sources.0.1.2-alfa\HttpParser.cs" />
+    <Compile Include="App_Packages\HttpHelpers.Sources.0.1.6-alfa\Extensions\CharExtensions.cs" />
+    <Compile Include="App_Packages\HttpHelpers.Sources.0.1.6-alfa\Extensions\StringExtensions.cs" />
+    <Compile Include="App_Packages\HttpHelpers.Sources.0.1.6-alfa\Extensions\StringReaderExtensions.cs" />
+    <Compile Include="App_Packages\HttpHelpers.Sources.0.1.6-alfa\HttpParser.cs" />
+    <Compile Include="App_Packages\HttpHelpers.Sources.0.1.6-alfa\HttpParser.RawParser.cs" />
     <Compile Include="App_Packages\Owin.Types.Sources.0.8.3-alpha\Extensions\OwinRequestExtensions.cs" />
     <Compile Include="App_Packages\Owin.Types.Sources.0.8.3-alpha\Helpers\OwinHelpers.cs" />
     <Compile Include="App_Packages\Owin.Types.Sources.0.8.3-alpha\OwinConstants.cs" />

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
   <metadata>
     <id>HttpHelpers.Sources</id>
-    <version>0.1.2-alfa</version>
+    <version>0.1.6-alfa</version>
     <title>HTTP Helpers</title>
     <authors>Giacomo Stelluti Scala</authors>
     <owners>Giacomo Stelluti Scala</owners>

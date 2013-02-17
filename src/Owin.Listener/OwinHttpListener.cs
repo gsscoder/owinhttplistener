@@ -30,6 +30,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -90,9 +91,15 @@ namespace Owin.Listener
 
             await _appFunc(environment);
 
-            stream.Close();
-            socket.Close();
-
+            var response = (Stream) environment[OwinConstants.ResponseBody];
+            response.Seek(0, SeekOrigin.Begin);
+            await response.CopyToAsync(stream)
+                .Then(() =>
+                    {
+                        stream.Close();
+                        socket.Close();
+                    });
+                
             await ListenAsync();
         }
 
@@ -103,7 +110,7 @@ namespace Owin.Listener
 
             var response = new OwinResponse(request)
                 {
-                    Body = stream
+                    Body = new MemoryStream()
                 };
 
             return request.Dictionary;
