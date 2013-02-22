@@ -1,6 +1,6 @@
-﻿Owin HTTP Listener 0.1.0.6 alfa.
+﻿Owin HTTP Listener 0.1.0.7 alfa.
 ===
-Essential and simple async Owin HTTP listener for .NET 4.5. This library uses Owin.Types from [http://www.myget.org/F/owin/](http://www.myget.org/F/owin/)
+Sample Owin HTTP listener for .NET 4.5. This library uses Owin.Types from [http://www.myget.org/F/owin/](http://www.myget.org/F/owin/)
 and [HttpHelpers](https://github.com/gsscoder/httphelpers).
 
 What is it:
@@ -13,11 +13,9 @@ At glance:
 ```csharp
 using AppFunc = Func<IDictionary<string, object>, Task>;
 
-var localEp = new IPAddress(new byte[] {0, 0, 0, 0};
-
 var listener = new OwinHttpListener(
     new OwinApplication().ProcessRequest, // with AppFunc signature
-    localEp, 8899);
+    8899);                                // localhost:8899
 server.Start();
 
 listener.ListenAsync().Wait();

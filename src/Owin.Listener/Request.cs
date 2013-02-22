@@ -38,7 +38,6 @@ namespace Owin.Listener
 {
     static class Request
     {
-
         public static async Task<OwinRequest> FromStreamAsync(Stream stream)
         {
             var request = OwinRequest.Create();
@@ -67,6 +66,5 @@ namespace Owin.Listener
             request.QueryString = uri.Query.Length > 0 ? uri.Query.Substring(1) : String.Empty;
             return request;
         }
-
     }
 }

@@ -48,14 +48,18 @@ namespace Owin.Listener
 
     public class OwinHttpListener
     {
+        private readonly AppFunc appFunc;
+        private readonly CancellationTokenSource cts;
+        private readonly TcpListener listener;
+
         public OwinHttpListener(AppFunc appFunc, IPAddress localEp, int port)
         {
-            _appFunc = appFunc;
+            this.appFunc = appFunc;
             LocalEndPoint = localEp;
             Port = port;
             UriPrefix = string.Concat("http://", Dns.GetHostName(), ":", port);
-            _listener = new TcpListener(localEp, port);
-            _cts = new CancellationTokenSource();
+            this.listener = new TcpListener(localEp, port);
+            this.cts = new CancellationTokenSource();
         }
 
         public OwinHttpListener(AppFunc appFunc, int port)
@@ -71,35 +75,47 @@ namespace Owin.Listener
 
         public void Start()
         {
-            _listener.Start();
+            this.listener.Start();
         }
 
         public async Task ListenAsync()
         {
             Trace.WriteLine("ENTER ListenAsync");
 
-            if (_cts.Token.IsCancellationRequested)
+            if (this.cts.Token.IsCancellationRequested)
             {
                 Trace.WriteLine("cancelled");
                 return;
             }
 
-            var socket = await _listener.AcceptSocketAsync();
-            var stream = new NetworkStream(socket);
+            var socket = await this.listener.AcceptSocketAsync();
 
-            var environment = await CreateEnvironmentAsync(stream);
+            Action accept = async () =>
+                {
+                    var stream = new NetworkStream(socket);
 
-            await _appFunc(environment);
+                    var environment = await CreateEnvironmentAsync(stream);
 
-            var response = (Stream) environment[OwinConstants.ResponseBody];
-            response.Seek(0, SeekOrigin.Begin);
-            await response.CopyToAsync(stream)
-                .Then(() =>
-                    {
-                        stream.Close();
-                        socket.Close();
-                    });
-                
+                    await this.appFunc(environment);
+
+                    var response = (Stream)environment[OwinConstants.ResponseBody];
+                    response.Seek(0, SeekOrigin.Begin);
+                    await response.CopyToAsync(stream).Then(
+                        () =>
+                            {
+                                stream.Close();
+                                socket.Close();
+                            });
+                };
+
+            WaitCallback acceptCallback = _ =>
+                {
+                    Trace.WriteLine("accepted at " + DateTime.Now.ToLongTimeString());
+                    accept();
+                };
+
+            ThreadPool.QueueUserWorkItem(acceptCallback);
+    
             await ListenAsync();
         }
 
@@ -118,12 +134,8 @@ namespace Owin.Listener
 
         public void Stop()
         {
-            _cts.Cancel();
-            _listener.Stop();
+            this.cts.Cancel();
+            this.listener.Stop();
         }
-
-        private readonly AppFunc _appFunc;
-        private readonly CancellationTokenSource _cts;
-        private readonly TcpListener _listener;
     }
 }
