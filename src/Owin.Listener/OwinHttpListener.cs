@@ -52,13 +52,13 @@ namespace Owin.Listener
         private readonly CancellationTokenSource cts;
         private readonly TcpListener listener;
 
-        public OwinHttpListener(AppFunc appFunc, IPAddress localEp, int port)
+        public OwinHttpListener(AppFunc appFunc, IPAddress local, int port)
         {
             this.appFunc = appFunc;
-            LocalEndPoint = localEp;
-            Port = port;
-            UriPrefix = string.Concat("http://", Dns.GetHostName(), ":", port);
-            this.listener = new TcpListener(localEp, port);
+
+            UriPrefix = string.Concat("http://", local.ToString(), ":", port);
+
+            this.listener = new TcpListener(local, port);
             this.cts = new CancellationTokenSource();
         }
 
@@ -66,10 +66,6 @@ namespace Owin.Listener
             : this(appFunc, new IPAddress(new byte[] {0, 0, 0, 0}), port)
         {
         }
-
-        public IPAddress LocalEndPoint { get; private set; }
-
-        public int Port { get; private set; }
 
         internal static string UriPrefix { get; private set; }
 
