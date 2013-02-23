@@ -90,9 +90,40 @@ namespace Owin.Listener
 
             var socket = await this.listener.AcceptSocketAsync();
 
+            Action<Socket, Stream> disconnect = (sock, stm) =>
+                {
+                    try
+                    {
+                        if (stm != null)
+                        {
+                            stm.Close();
+                        }
+                        if (sock != null)
+                        {
+                            sock.Close();
+                        }
+                    }
+                    catch
+                    {
+                        Trace.WriteLine("problem disposing socket");
+                    }
+                };
+
             Action accept = async () =>
                 {
+                    if (!socket.Connected)
+                    {
+                        disconnect(socket, null);
+                        return;
+                    }
+
                     var stream = new NetworkStream(socket);
+
+                    if (!stream.DataAvailable)
+                    {
+                        disconnect(socket, stream);
+                        return;
+                    }
 
                     var environment = await CreateEnvironmentAsync(stream);
 
@@ -101,11 +132,7 @@ namespace Owin.Listener
                     var response = (Stream)environment[OwinConstants.ResponseBody];
                     response.Seek(0, SeekOrigin.Begin);
                     await response.CopyToAsync(stream).Then(
-                        () =>
-                            {
-                                stream.Close();
-                                socket.Close();
-                            });
+                        () => disconnect(socket, stream));
                 };
 
             WaitCallback acceptCallback = _ =>
@@ -121,8 +148,14 @@ namespace Owin.Listener
 
         private static async Task<IDictionary<string, object>> CreateEnvironmentAsync(NetworkStream stream)
         {
-            var request = await Request.FromStreamAsync(stream);
-            request.Body = stream;
+            var buffer = await stream.ToByteArrayAsync();
+            var requestStream = new MemoryStream(buffer.ToArray());
+            var request = await Request.FromStreamAsync(requestStream);
+            //requestStream.Seek(0, SeekOrigin.Begin);
+            request.Body = requestStream;
+
+            //var request = await Request.FromStreamAsync(stream);
+            //request.Body = stream;
 
             var response = new OwinResponse(request)
                 {
