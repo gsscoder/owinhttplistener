@@ -1,0 +1,11 @@
+P:\OwinHttpListener\src\Owin.Listener.Demo.NancyFx\bin\Debug\Owin.Listener.Demo.NancyFx.exe.config
+P:\OwinHttpListener\src\Owin.Listener.Demo.NancyFx\bin\Debug\Owin.Listener.Demo.NancyFx.exe
+P:\OwinHttpListener\src\Owin.Listener.Demo.NancyFx\bin\Debug\Owin.Listener.Demo.NancyFx.pdb
+P:\OwinHttpListener\src\Owin.Listener.Demo.NancyFx\bin\Debug\Nancy.dll
+P:\OwinHttpListener\src\Owin.Listener.Demo.NancyFx\bin\Debug\Nancy.Owin.dll
+P:\OwinHttpListener\src\Owin.Listener.Demo.NancyFx\bin\Debug\Owin.dll
+P:\OwinHttpListener\src\Owin.Listener.Demo.NancyFx\bin\Debug\Owin.Listener.dll
+P:\OwinHttpListener\src\Owin.Listener.Demo.NancyFx\bin\Debug\Owin.Listener.pdb
+P:\OwinHttpListener\src\Owin.Listener.Demo.NancyFx\obj\Debug\Owin.Listener.Demo.NancyFx.csprojResolveAssemblyReference.cache
+P:\OwinHttpListener\src\Owin.Listener.Demo.NancyFx\obj\Debug\Owin.Listener.Demo.NancyFx.exe
+P:\OwinHttpListener\src\Owin.Listener.Demo.NancyFx\obj\Debug\Owin.Listener.Demo.NancyFx.pdb

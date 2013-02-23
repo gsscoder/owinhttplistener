@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Welcome", ".Welcome", "{85
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Owin.Listener.Demo.NancyFx", "src\Owin.Listener.Demo.NancyFx\Owin.Listener.Demo.NancyFx.csproj", "{B40AFAAF-99FB-402A-A551-508F9503B864}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F5F5D8C7-463E-4A96-89A1-A11D49FD02B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5F5D8C7-463E-4A96-89A1-A11D49FD02B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5F5D8C7-463E-4A96-89A1-A11D49FD02B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B40AFAAF-99FB-402A-A551-508F9503B864}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B40AFAAF-99FB-402A-A551-508F9503B864}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B40AFAAF-99FB-402A-A551-508F9503B864}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B40AFAAF-99FB-402A-A551-508F9503B864}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
