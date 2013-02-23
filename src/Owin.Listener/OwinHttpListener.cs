@@ -112,17 +112,16 @@ namespace Owin.Listener
 
                     var response = (Stream)environment[OwinConstants.ResponseBody];
                     response.Seek(0, SeekOrigin.Begin);
-                    await response.CopyToAsync(stream).Then(
-                        () => Disconnect(stream, socket));
+                    await response.CopyToAsync(stream);
+
+                    Disconnect(stream, socket);
                 };
 
-            WaitCallback acceptCallback = _ =>
+            ThreadPool.QueueUserWorkItem(_ =>
                 {
                     Trace.WriteLine("accepted at " + DateTime.Now.ToLongTimeString());
                     accept();
-                };
-
-            ThreadPool.QueueUserWorkItem(acceptCallback);
+                });
     
             await ListenAsync();
         }
