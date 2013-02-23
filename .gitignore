@@ -2,6 +2,8 @@ src/Owin.Listener/bin/*
 src/Owin.Listener/obj
 src/Owin.Listener.Demo/bin/*
 src/Owin.Listener.Demo/obj
+src/Owin.Listener.Demo.NancyFx/bin/*
+src/Owin.Listener.Demo.NancyFx/obj
 *.suo
 *.userprefs
 *~

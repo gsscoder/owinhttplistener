@@ -90,30 +90,11 @@ namespace Owin.Listener
 
             var socket = await this.listener.AcceptSocketAsync();
 
-            Action<Socket, Stream> disconnect = (sock, stm) =>
-                {
-                    try
-                    {
-                        if (stm != null)
-                        {
-                            stm.Close();
-                        }
-                        if (sock != null)
-                        {
-                            sock.Close();
-                        }
-                    }
-                    catch
-                    {
-                        Trace.WriteLine("problem disposing socket");
-                    }
-                };
-
             Action accept = async () =>
                 {
                     if (!socket.Connected)
                     {
-                        disconnect(socket, null);
+                        Disconnect(null, socket);
                         return;
                     }
 
@@ -121,7 +102,7 @@ namespace Owin.Listener
 
                     if (!stream.DataAvailable)
                     {
-                        disconnect(socket, stream);
+                        Disconnect(stream, socket);
                         return;
                     }
 
@@ -132,7 +113,7 @@ namespace Owin.Listener
                     var response = (Stream)environment[OwinConstants.ResponseBody];
                     response.Seek(0, SeekOrigin.Begin);
                     await response.CopyToAsync(stream).Then(
-                        () => disconnect(socket, stream));
+                        () => Disconnect(stream, socket));
                 };
 
             WaitCallback acceptCallback = _ =>
@@ -150,12 +131,8 @@ namespace Owin.Listener
         {
             var buffer = await stream.ToByteArrayAsync();
             var requestStream = new MemoryStream(buffer.ToArray());
-            var request = await Request.FromStreamAsync(requestStream);
-            //requestStream.Seek(0, SeekOrigin.Begin);
+            var request = await Request.FromStreamAsync(requestStream);;
             request.Body = requestStream;
-
-            //var request = await Request.FromStreamAsync(stream);
-            //request.Body = stream;
 
             var response = new OwinResponse(request)
                 {
@@ -163,6 +140,25 @@ namespace Owin.Listener
                 };
 
             return request.Dictionary;
+        }
+
+        private static void Disconnect(Stream stream, Socket socket)
+        {
+            try
+            {
+                if (stream != null)
+                {
+                    stream.Close();
+                }
+                if (socket != null)
+                {
+                    socket.Close();
+                }
+            }
+            catch
+            {
+                Trace.WriteLine("problem disposing socket");
+            }
         }
 
         public void Stop()
