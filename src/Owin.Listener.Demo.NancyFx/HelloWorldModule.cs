@@ -8,7 +8,8 @@
         {
             Get["/"] = _ => "<a href=\"/hello\">go here</a>";
 
-            Get["/hello"] = _ => "Hello, Nancy OWIN!";
+            Get["/hello"] = _ => "<p>Hello, Nancy OWIN!<br/>" +
+                "<a href=\"/\">back home</a></p>";
         }
     }
 }

@@ -46,11 +46,13 @@ namespace Owin.Listener
 {
     using AppFunc = Func<IDictionary<string, object>, Task>;
 
-    public class OwinHttpListener
+    public class OwinHttpListener : IDisposable
     {
         private readonly AppFunc appFunc;
         private readonly CancellationTokenSource cts;
         private readonly TcpListener listener;
+        private int started;
+        private int stopped;
 
         public OwinHttpListener(AppFunc appFunc, IPAddress local, int port)
         {
@@ -71,12 +73,17 @@ namespace Owin.Listener
 
         public void Start()
         {
+            if (Interlocked.CompareExchange(ref this.started, 1, 0) != 0)
+            {
+                throw new InvalidOperationException("Listener is already started.");
+            }
+
             this.listener.Start();
         }
 
         public async Task ListenAsync()
         {
-            Trace.WriteLine("ENTER ListenAsync");
+            Trace.WriteLine("listening started");
 
             if (this.cts.Token.IsCancellationRequested)
             {
@@ -107,15 +114,21 @@ namespace Owin.Listener
                     await this.appFunc(environment);
 
                     var response = (Stream)environment[OwinConstants.ResponseBody];
-                    response.Seek(0, SeekOrigin.Begin);
-                    await response.CopyToAsync(stream);
+                    if (response != null && response.Length > 0)
+                    {
+                        if (response.CanSeek)
+                        {
+                            response.Seek(0, SeekOrigin.Begin);
+                        }
+                        await response.CopyToAsync(stream);
+                    }
 
                     Disconnect(stream, socket);
                 };
 
             ThreadPool.QueueUserWorkItem(_ =>
                 {
-                    Trace.WriteLine("accepted at " + DateTime.Now.ToLongTimeString());
+                    Trace.WriteLine(string.Format("accepted at {0}", DateTime.Now.ToLongTimeString()));
                     accept();
                 });
     
@@ -158,8 +171,28 @@ namespace Owin.Listener
 
         public void Stop()
         {
-            this.cts.Cancel();
-            this.listener.Stop();
+            if (this.started == 0)
+            {
+                return;
+            }
+            if (Interlocked.CompareExchange(ref stopped, 1, 0) != 0)
+            {
+                return;
+            }
+            try
+            {
+                this.cts.Cancel();
+                this.listener.Stop();
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e.Message);
+            }
+        }
+
+        public void Dispose()
+        {
+            this.Stop();
         }
     }
 }

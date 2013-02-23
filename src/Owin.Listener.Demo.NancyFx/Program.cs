@@ -15,9 +15,10 @@
         {
             var nancyOwin = new NancyOwinHost(EmptyApp, new DefaultNancyBootstrapper());
 
-            var listener = new OwinHttpListener(nancyOwin.Invoke, new IPAddress(new byte[] { 0, 0, 0, 0 }), 8899);
+            var listener = new OwinHttpListener(nancyOwin.Invoke, 8899);
 
             listener.Start();
+
             listener.ListenAsync().Wait();
 
             Console.ReadLine();
