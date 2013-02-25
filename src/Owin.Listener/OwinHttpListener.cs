@@ -48,20 +48,20 @@ namespace Owin.Listener
 
     public class OwinHttpListener : IDisposable
     {
-        private readonly AppFunc appFunc;
-        private readonly CancellationTokenSource cts;
-        private readonly TcpListener listener;
-        private int started;
-        private int stopped;
+        private readonly AppFunc _appFunc;
+        private readonly CancellationTokenSource _cts;
+        private readonly TcpListener _listener;
+        private int _started;
+        private int _stopped;
 
         public OwinHttpListener(AppFunc appFunc, IPAddress local, int port)
         {
-            this.appFunc = appFunc;
+            _appFunc = appFunc;
 
             UriPrefix = string.Concat("http://", local.ToString(), ":", port);
 
-            this.listener = new TcpListener(local, port);
-            this.cts = new CancellationTokenSource();
+            _listener = new TcpListener(local, port);
+            _cts = new CancellationTokenSource();
         }
 
         public OwinHttpListener(AppFunc appFunc, int port)
@@ -73,25 +73,25 @@ namespace Owin.Listener
 
         public void Start()
         {
-            if (Interlocked.CompareExchange(ref this.started, 1, 0) != 0)
+            if (Interlocked.CompareExchange(ref _started, 1, 0) != 0)
             {
                 throw new InvalidOperationException("Listener is already started.");
             }
 
-            this.listener.Start();
+            _listener.Start();
         }
 
         public async Task ListenAsync()
         {
             Trace.WriteLine("listening started");
 
-            if (this.cts.Token.IsCancellationRequested)
+            if (_cts.Token.IsCancellationRequested)
             {
                 Trace.WriteLine("cancelled");
                 return;
             }
 
-            var socket = await this.listener.AcceptSocketAsync();
+            var socket = await _listener.AcceptSocketAsync();
 
             Action accept = async () =>
                 {
@@ -111,7 +111,7 @@ namespace Owin.Listener
 
                     var environment = await CreateEnvironmentAsync(stream);
 
-                    await this.appFunc(environment);
+                    await _appFunc(environment);
 
                     var response = (Stream)environment[OwinConstants.ResponseBody];
                     if (response != null && response.Length > 0)
@@ -171,18 +171,18 @@ namespace Owin.Listener
 
         public void Stop()
         {
-            if (this.started == 0)
+            if (_started == 0)
             {
                 return;
             }
-            if (Interlocked.CompareExchange(ref stopped, 1, 0) != 0)
+            if (Interlocked.CompareExchange(ref _stopped, 1, 0) != 0)
             {
                 return;
             }
             try
             {
-                this.cts.Cancel();
-                this.listener.Stop();
+                _cts.Cancel();
+                _listener.Stop();
             }
             catch (Exception e)
             {
@@ -192,7 +192,7 @@ namespace Owin.Listener
 
         public void Dispose()
         {
-            this.Stop();
+            Stop();
         }
     }
 }
